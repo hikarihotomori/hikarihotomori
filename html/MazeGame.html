@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maze Game</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="mazeCanvas" width="500" height="500"></canvas>
+    <script>
+        var canvas = document.getElementById("mazeCanvas");
+        var ctx = canvas.getContext("2d");
+        var currentCell;
+        var cellSize = 25;
+        var mazeSize = 20;
+        var maze = [];
+        var stack = [];
+        var visitedCells = 1;
+        var totalCells = mazeSize * mazeSize;
+        
+        function initMaze() {
+            for (var i = 0; i < mazeSize; i++) {
+                maze[i] = [];
+                for (var j = 0; j < mazeSize; j++) {
+                    maze[i][j] = {
+                        x: i,
+                        y: j,
+                        northWall: true,
+                        eastWall: true,
+                        southWall: true,
+                        westWall: true,
+                        visited: false
+                    };
+                }
+            }
+            currentCell = maze[0][0];
+            currentCell.visited = true;
+        }
+        
+        function drawMaze() {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < mazeSize; i++) {
+                for (var j = 0; j < mazeSize; j++) {
+                    if (maze[i][j].visited) {
+                        ctx.fillStyle = "#fff";
+                        ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+                    }
+                    if (maze[i][j].northWall) {
+                        ctx.strokeStyle = "#000";
+                        ctx.beginPath();
+                        ctx.moveTo(i * cellSize, j * cellSize);
+                        ctx.lineTo((i + 1) * cellSize, j * cellSize);
+                        ctx.stroke();
+                    }
+                    if (maze[i][j].eastWall) {
+                        ctx.strokeStyle = "#000";
+                        ctx.beginPath();
+                        ctx.moveTo((i + 1) * cellSize, j * cellSize);
+                        ctx.lineTo((i + 1) * cellSize, (j + 1) * cellSize);
+                        ctx.stroke();
+                    }
+                    if (maze[i][j].southWall) {
+                        ctx.strokeStyle = "#000";
+                        ctx.beginPath();
+                        ctx.moveTo(i * cellSize, (j + 1) * cellSize);
+                        ctx.lineTo((i + 1) * cellSize, (j + 1) * cellSize);
+                        ctx.stroke();
+                    }
+                    if (maze[i][j].westWall) {
+                        ctx.strokeStyle = "#000";
+                        ctx.beginPath();
+                        ctx.moveTo(i * cellSize, j * cellSize);
+                        ctx.lineTo(i * cellSize, (j + 1) * cellSize);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(drawMaze);
+        }
+        
+        function removeWall(currentCell, nextCell) {
+            if (currentCell.x === nextCell.x && currentCell.y === nextCell.y + 1) {
+                currentCell.northWall = false;
+                nextCell.southWall = false;
+            } else if (currentCell.x === nextCell.x && currentCell.y === nextCell.y - 1) {
+                currentCell.southWall = false;
+                nextCell.northWall = false;
+            } else if (currentCell.x === nextCell.x + 1 && currentCell.y === nextCell.y) {
+                currentCell.westWall = false;
+                nextCell.eastWall = false;
+            } else if (currentCell.x === nextCell.x - 1 && currentCell.y === nextCell.y) {
+                currentCell.eastWall = false;
+                nextCell.westWall = false;
+            }
+        }
+        
+        function getNeighbors(cell) {
+            var neighbors = [];
+            if (cell.y > 0 && !maze[cell.x][cell.y - 1].visited) {
+                neighbors.push(maze[cell.x][cell.y - 1]);
+            }
+            if (cell.x < mazeSize - 1 && !maze[cell.x + 1][cell.y].visited) {
+                neighbors.push(maze[cell.x + 1][cell.y]);
+            }
+            if (cell.y < mazeSize - 1 && !maze[cell.x][cell.y + 1].visited) {
+                neighbors.push(maze[cell.x][cell.y + 1]);
+            }
+            if (cell.x > 0 && !maze[cell.x - 1][cell.y].visited) {
+                neighbors.push(maze[cell.x - 1][cell.y]);
+            }
+            return neighbors;
+        }
+        
+        function generateMaze() {
+            if (visitedCells < totalCells) {
+                var neighbors = getNeighbors(currentCell);
+                if (neighbors.length > 0) {
+                    var nextCell = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    removeWall(currentCell, nextCell);
+                    stack.push(currentCell);
+                    currentCell = nextCell;
+                    currentCell.visited = true;
+                    visitedCells++;
+                } else if (stack.length > 0) {
+                    currentCell = stack.pop();
+                }
+                setTimeout(generateMaze, 0);
+            } else {
+                console.log("Maze generation complete!");
+            }
+        }
+        
+        initMaze();
+        generateMaze();
+        drawMaze();
+    </script>
+</body>
+</html>
