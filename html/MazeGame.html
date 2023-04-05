@@ -20,6 +20,10 @@
         var stack = [];
         var visitedCells = 1;
         var totalCells = mazeSize * mazeSize;
+        var player = {
+            x: 0,
+            y: 0
+        };
         
         function initMaze() {
             for (var i = 0; i < mazeSize; i++) {
@@ -79,6 +83,11 @@
                     }
                 }
             }
+            
+            // Draw player
+            ctx.fillStyle = "red";
+            ctx.fillRect(player.x * cellSize, player.y * cellSize, cellSize, cellSize);
+            
             requestAnimationFrame(drawMaze);
         }
         
@@ -134,9 +143,27 @@
             }
         }
         
+        function movePlayer(e) {
+            var currentCell = maze[player.x][player.y];
+            if (e.keyCode === 37 && !currentCell.westWall && player.x > 0) {
+                player.x--;
+            } else if (e.keyCode === 38 && !currentCell.northWall && player.y > 0) {
+                player.y--;
+            } else if (e.keyCode === 39 && !currentCell.eastWall && player.x < mazeSize - 1) {
+                player.x++;
+            } else if (e.keyCode === 40 && !currentCell.southWall && player.y < mazeSize - 1) {
+                player.y++;
+            }
+            
+            if (player.x === mazeSize - 1 && player.y === mazeSize - 1) {
+                alert("Congratulations! You have completed the maze!");
+            }
+        }
+        
         initMaze();
         generateMaze();
         drawMaze();
+        document.addEventListener("keydown", movePlayer);
     </script>
 </body>
 </html>
