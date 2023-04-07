@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3x3 Slide Puzzle</title>
+    <style>
+        #puzzle {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        .tile {
+            width: 100px;
+            height: 100px;
+            float: left;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 24px;
+            border: 1px solid black;
+        }
+        .empty {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div id="puzzle">
+        <div class="tile">1</div>
+        <div class="tile">2</div>
+        <div class="tile">3</div>
+        <div class="tile">4</div>
+        <div class="tile">5</div>
+        <div class="tile">6</div>
+        <div class="tile">7</div>
+        <div class="tile">8</div>
+        <div class="tile empty"></div>
+    </div>
+
+    <script>
+        var puzzle = document.getElementById('puzzle');
+        var tiles = puzzle.getElementsByTagName('div');
+        var emptyTile = tiles[tiles.length - 1];
+        
+        for (var i = 0; i < tiles.length; i++) {
+            tiles[i].onclick = function() {
+                if (this.className != 'empty') {
+                    var tileIndex = getTileIndex(this.innerHTML);
+                    var emptyIndex = getTileIndex('');
+                    
+                    if (isMovable(tileIndex, emptyIndex)) {
+                        swapTiles(tileIndex, emptyIndex);
+                    }
+                }
+            };
+        }
+        
+        function getTileIndex(number) {
+            for (var i = 0; i < tiles.length; i++) {
+                if (tiles[i].innerHTML == number) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        function isMovable(tileIndex, emptyIndex) {
+            if (tileIndex == emptyIndex - 1 && tileIndex % 3 != 2) {
+                return true;
+            } else if (tileIndex == emptyIndex + 1 && tileIndex % 3 != 0) {
+                return true;
+            } else if (tileIndex == emptyIndex - 3 || tileIndex == emptyIndex + 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        function swapTiles(tileIndex, emptyIndex) {
+            var temp = tiles[tileIndex].innerHTML;
+            tiles[tileIndex].innerHTML = tiles[emptyIndex].innerHTML;
+            tiles[emptyIndex].innerHTML = temp;
+
+            if (tiles[tileIndex].innerHTML == '') {
+                tiles[tileIndex].className = 'tile empty';
+                tiles[emptyIndex].className = 'tile';
+            } else {
+                tiles[tileIndex].className = 'tile';
+                tiles[emptyIndex].className = 'tile empty';
+            }
+        }
+    </script>
+</body>
+</html>
