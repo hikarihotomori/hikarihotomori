@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Move Image</title>
+</head>
+<body>
+    <img id="image" src="image.gif" style="position:absolute; left:0px; top:0px;">
+    <script type="text/javascript">
+        var imgObj = document.getElementById('image');
+        var animate;
+        function moveRight(){
+            imgObj.style.left = parseInt(imgObj.style.left) + 10 + 'px';
+            animate = setTimeout(moveRight,20);
+        }
+        function moveLeft(){
+            imgObj.style.left = parseInt(imgObj.style.left) - 10 + 'px';
+            animate = setTimeout(moveLeft,20);
+        }
+        function moveUp(){
+            imgObj.style.top = parseInt(imgObj.style.top) - 10 + 'px';
+            animate = setTimeout(moveUp,20);
+        }
+        function moveDown(){
+            imgObj.style.top = parseInt(imgObj.style.top) + 10 + 'px';
+            animate = setTimeout(moveDown,20);
+        }
+        function stop(){
+            clearTimeout(animate);
+        }
+        document.onkeydown = function(e) {
+            switch (e.keyCode) {
+                case 37:
+                    moveLeft();
+                    break;
+                case 38:
+                    moveUp();
+                    break;
+                case 39:
+                    moveRight();
+                    break;
+                case 40:
+                    moveDown();
+                    break;
+            }
+        };
+        document.onkeyup = stop;
+    </script>
+</body>
+</html>
