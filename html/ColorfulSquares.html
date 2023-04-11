@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Colorful Squares</title>
+</head>
+<body>
+    <div id="canvasContainer"></div>
+
+    <script>
+        var colors = ['red', 'orange', 'yellow', 'lightgreen', 'green', 'blue', 'purple'];
+        var squareSize = 50;
+        var canvasContainer = document.getElementById('canvasContainer');
+
+        for (var i = 0; i < colors.length; i++) {
+            var canvas = document.createElement('canvas');
+            canvas.id = 'myCanvas' + i;
+            canvas.width = squareSize;
+            canvas.height = squareSize;
+            canvasContainer.appendChild(canvas);
+
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = colors[i];
+            ctx.fillRect(0, 0, squareSize, squareSize);
+        }
+    </script>
+</body>
+</html>
