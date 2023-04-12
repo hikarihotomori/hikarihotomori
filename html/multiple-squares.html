@@ -23,16 +23,15 @@ td {
 <script>
 const size = 20;
 const grid = document.getElementById('grid');
-let yellowCell = null;
+const yellowCells = [];
 
 for (let i = 0; i < size; i++) {
   const row = document.createElement('tr');
   for (let j = 0; j < size; j++) {
     const cell = document.createElement('td');
     cell.addEventListener('click', () => {
-      if (yellowCell) yellowCell.style.backgroundColor = 'white';
       cell.style.backgroundColor = 'yellow';
-      yellowCell = cell;
+      yellowCells.push(cell);
     });
     row.appendChild(cell);
   }
@@ -40,14 +39,12 @@ for (let i = 0; i < size; i++) {
 }
 
 setInterval(() => {
-  if (yellowCell) {
-    const nextCell = yellowCell.nextElementSibling;
-    if (nextCell) {
-      yellowCell.style.backgroundColor = 'white';
-      nextCell.style.backgroundColor = 'yellow';
-      yellowCell = nextCell;
-    }
-  }
+  yellowCells.forEach((cell, index) => {
+    const nextCell = cell.nextElementSibling || cell.parentNode.firstElementChild;
+    cell.style.backgroundColor = 'white';
+    nextCell.style.backgroundColor = 'yellow';
+    yellowCells[index] = nextCell;
+  });
 }, 1000);
 </script>
 
