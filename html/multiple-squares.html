@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  border-collapse: collapse;
+}
+
+table, td {
+  border: 1px solid black;
+}
+
+td {
+  width: 20px;
+  height: 20px;
+}
+</style>
+</head>
+<body>
+
+<table id="grid"></table>
+
+<script>
+const size = 20;
+const grid = document.getElementById('grid');
+let yellowCell = null;
+
+for (let i = 0; i < size; i++) {
+  const row = document.createElement('tr');
+  for (let j = 0; j < size; j++) {
+    const cell = document.createElement('td');
+    cell.addEventListener('click', () => {
+      if (yellowCell) yellowCell.style.backgroundColor = 'white';
+      cell.style.backgroundColor = 'yellow';
+      yellowCell = cell;
+    });
+    row.appendChild(cell);
+  }
+  grid.appendChild(row);
+}
+
+setInterval(() => {
+  if (yellowCell) {
+    const nextCell = yellowCell.nextElementSibling;
+    if (nextCell) {
+      yellowCell.style.backgroundColor = 'white';
+      nextCell.style.backgroundColor = 'yellow';
+      yellowCell = nextCell;
+    }
+  }
+}, 1000);
+</script>
+
+</body>
+</html>
